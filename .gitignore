@@ -1,0 +1,27 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Streamlit
+.streamlit/
+! .streamlit/config.toml
+
+# IDE settings
+.vscode/
+.idea/
+
+# User uploads & scratch directory
+uploads/*
+!uploads/.gitkeep
+scratch/
+
+# Local configuration
+.env

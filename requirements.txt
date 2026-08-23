@@ -1,0 +1,10 @@
+streamlit
+PyPDF2
+Pillow
+streamlit-lottie
+requests
+pandas
+pyyaml
+python-dotenv
+ollama
+pytesseract
