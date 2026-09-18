@@ -1,11 +1,11 @@
 import os
 import streamlit as st
 import ollama
-import google.generativeai as genai
+from google import genai
 
 # Configuration
 LOCAL_MODEL = "gemma2:2b"
-ONLINE_MODEL = "gemini-1.5-flash"
+ONLINE_MODEL = "gemini-3.6-flash"
 
 def get_gemini_client():
     """Configures and returns the Gemini client if API key is available, else None."""
@@ -17,9 +17,7 @@ def get_gemini_client():
             pass
     
     if api_key:
-        genai.configure(api_key=api_key)
-        # Verify it works by instantiating a model
-        return genai.GenerativeModel(ONLINE_MODEL)
+        return genai.Client(api_key=api_key)
     return None
 
 def is_ollama_running():
@@ -42,12 +40,13 @@ def ask_ai(question, level="beginner", language="English"):
         "Always respond in the requested language."
     )
     
-    gemini_model = get_gemini_client()
+    client = get_gemini_client()
 
-    if gemini_model:
+    if client:
         try:
-            response = gemini_model.generate_content(
-                f"{system_prompt}\n\nUser Question: {prompt}"
+            response = client.models.generate_content(
+                model=ONLINE_MODEL,
+                contents=f"{system_prompt}\n\nUser Question: {prompt}"
             )
             return response.text
         except Exception as e:
@@ -76,13 +75,13 @@ def ask_ai_stream(question, level="beginner", language="English"):
         "Always respond in the requested language."
     )
     
-    gemini_model = get_gemini_client()
+    client = get_gemini_client()
 
-    if gemini_model:
+    if client:
         try:
-            response = gemini_model.generate_content(
-                f"{system_prompt}\n\nUser Question: {prompt}",
-                stream=True
+            response = client.models.generate_content_stream(
+                model=ONLINE_MODEL,
+                contents=f"{system_prompt}\n\nUser Question: {prompt}"
             )
             for chunk in response:
                 if chunk.text:
@@ -114,11 +113,14 @@ def summarize_notes(text):
     prompt = f"Summarize the following educational text. Provide a concise summary. Format it nicely.\n\nText: {text}"
     system_prompt = "You are an expert academic summarizer. Always provide clear, concise summaries."
     
-    gemini_model = get_gemini_client()
+    client = get_gemini_client()
 
-    if gemini_model:
+    if client:
         try:
-            response = gemini_model.generate_content(f"{system_prompt}\n\n{prompt}")
+            response = client.models.generate_content(
+                model=ONLINE_MODEL,
+                contents=f"{system_prompt}\n\n{prompt}"
+            )
             content = response.text
         except Exception as e:
             content = f"Error: {str(e)}"
@@ -152,11 +154,14 @@ def generate_quiz(text, num_questions=3):
     )
     system_prompt = "You are a quiz generator. Create educational MCQs."
     
-    gemini_model = get_gemini_client()
+    client = get_gemini_client()
 
-    if gemini_model:
+    if client:
         try:
-            response = gemini_model.generate_content(f"{system_prompt}\n\n{prompt}")
+            response = client.models.generate_content(
+                model=ONLINE_MODEL,
+                contents=f"{system_prompt}\n\n{prompt}"
+            )
             content = response.text
         except Exception:
             content = "Error generating quiz."
