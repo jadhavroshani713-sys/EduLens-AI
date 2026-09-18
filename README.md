@@ -44,7 +44,16 @@ EduLens AI is a modern, student-focused web application designed to simplify lea
    pip install -r requirements.txt
    ```
 
-3. **Run the application:**
+3. **(Optional) Configure Online Mode:**
+   To host this app online (e.g., Streamlit Cloud) where local Ollama isn't available, the app uses the Google Gemini API to access advanced AI models in the cloud.
+   - Create a `.streamlit/secrets.toml` file in the project root.
+   - Add your Gemini API Key:
+     ```toml
+     GEMINI_API_KEY = "your-gemini-api-key-here"
+     ```
+   *(If you run this locally with Ollama installed, you can skip this step and the app will run 100% offline).*
+
+4. **Run the application:**
    ```bash
    streamlit run app.py
    ```

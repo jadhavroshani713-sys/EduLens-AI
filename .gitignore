@@ -13,6 +13,7 @@ __pycache__/
 # Streamlit
 .streamlit/
 ! .streamlit/config.toml
+.streamlit/secrets.toml
 
 # IDE settings
 .vscode/

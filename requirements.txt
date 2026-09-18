@@ -8,3 +8,4 @@ pyyaml
 python-dotenv
 ollama
 pytesseract
+google-generativeai
