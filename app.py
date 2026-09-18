@@ -3,11 +3,11 @@ import json
 import requests
 from streamlit_lottie import st_lottie
 from utils.translator import get_text
-from utils.ai_engine import is_ollama_running, DEFAULT_MODEL
+from utils.ai_engine import is_ollama_running, LOCAL_MODEL, ONLINE_MODEL, get_gemini_client
 
 # Page Configuration
 st.set_page_config(
-    page_title="EduLens AI - Offline Smart Education",
+    page_title="EduLens AI - Smart Education",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -40,12 +40,16 @@ with st.sidebar:
     
     # AI Status Indicator
     st.subheader("🤖 AI Status")
-    if is_ollama_running():
-        st.success(f"**Connected to {DEFAULT_MODEL}**")
+    gemini_client = get_gemini_client()
+    if gemini_client:
+        st.success(f"**Connected Online ({ONLINE_MODEL})**")
+        st.caption("✅ Powered by Gemini API")
+    elif is_ollama_running():
+        st.success(f"**Connected Offline ({LOCAL_MODEL})**")
         st.caption("✅ Processing is 100% Local & Private")
     else:
-        st.error("**Ollama Offline**")
-        st.warning("Please start Ollama to use AI features.")
+        st.error("**AI Engine Offline**")
+        st.warning("Please provide GEMINI_API_KEY or start Ollama.")
     
     st.markdown("---")
     language = st.selectbox("🌐 Select Language", ["English", "Hindi", "Marathi"])
@@ -55,7 +59,7 @@ with st.sidebar:
     st.info("💡 **Tip**: EduLens AI works completely without internet once the model is downloaded!")
     
     st.sidebar.markdown("---")
-    st.sidebar.write("v1.1.0-offline | Privacy First")
+    st.sidebar.write("v1.2.0-hybrid | AI Powered")
 
 # Home Page Content
 def main():
@@ -67,10 +71,8 @@ def main():
         
         st.markdown("""
         <div class='glass-card'>
-            <h3>🛡️ Privacy-First, Fully Offline Learning</h3>
-            <p>EduLens AI is your personal academic companion that runs <b>entirely on your machine</b>. 
-            No data leaves your device, making it the most secure and private way to learn with AI.
-            Powered by local LLMs via Ollama.</p>
+            <h3>🛡️ Hybrid AI Learning</h3>
+            <p>EduLens AI is your personal academic companion. It can run <b>online</b> using powerful Cloud APIs (like Gemini) or <b>entirely offline</b> on your machine via Ollama, ensuring privacy and reliability wherever you are.</p>
         </div>
         """, unsafe_allow_html=True)
         
